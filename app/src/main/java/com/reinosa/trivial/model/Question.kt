@@ -1,0 +1,14 @@
+package com.reinosa.trivial.model
+
+data class Pregunta(
+    val enunciado: String,
+    val opcionA: String,
+    val opcionB: String,
+    val opcionC: String,
+    val opcionD: String,
+    val respuestaCorrecta: Opcion
+)
+
+enum class Opcion {
+    A, B, C, D
+}
