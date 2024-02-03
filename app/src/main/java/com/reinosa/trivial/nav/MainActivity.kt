@@ -12,18 +12,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.reinosa.trivial.ui.theme.TrivialTheme
+import com.reinosa.trivial.view.finalScreen
 import com.reinosa.trivial.view.launchScreen
 import com.reinosa.trivial.view.menuScreen
 import com.reinosa.trivial.view.playScreen
 import com.reinosa.trivial.view.settingsScreen
-import com.reinosa.trivial.viewModel.SettingsViewModel
+import com.reinosa.trivial.viewModel.trivialViewModel
 
+val trivialViewModel = trivialViewModel()
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
-            TrivialTheme() {
-                // A surface container using the 'background' color from the theme
+            TrivialTheme(darkTheme = trivialViewModel.darkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -38,18 +40,12 @@ class MainActivity : ComponentActivity() {
 fun NavegationGraph() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Routes.launchScreen.route){
-        composable(route = Routes.launchScreen.route){
-            launchScreen(navController = navController)
-        }
-        composable(route = Routes.menuScreen.route){
-            menuScreen(navController)
-        }
-        composable(route = Routes.playScreen.route){
-            playScreen(navController)
-        }
-        composable(route = Routes.settingsScreen.route){
-            settingsScreen(navController, SettingsViewModel())
-        }
+
+        composable(route = Routes.launchScreen.route){launchScreen(navController) }
+        composable(route = Routes.menuScreen.route){menuScreen(navController)}
+        composable(route = Routes.playScreen.route){playScreen(navController,trivialViewModel)}
+        composable(route = Routes.settingsScreen.route){settingsScreen(navController,trivialViewModel)}
+        composable(route = Routes.resultScreen.route){finalScreen(navController,trivialViewModel)}
 
 
     }

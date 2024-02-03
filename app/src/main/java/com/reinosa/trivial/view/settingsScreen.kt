@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,22 +22,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.reinosa.trivial.viewModel.SettingsViewModel
+import com.reinosa.trivial.viewModel.trivialViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun settingsScreen(navController: NavController, SettingsViewModel: SettingsViewModel){
+fun settingsScreen(navController: NavController,trivialViewModel: trivialViewModel){
     var selectedText : String by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) } // Set expanded to true to show dropdown initially
-    val difficulty = listOf("Easy", "Normal", "Difficult", "WTF")
+
     var sliderValue by remember { mutableStateOf(0f) }
     var finishValue by remember { mutableStateOf("") }
+    var isOn = trivialViewModel.darkMode
+    var selectedOption by rememberSaveable { mutableStateOf(trivialViewModel.totalRounds) }
+    var selectedDiff by remember { mutableStateOf(trivialViewModel.difficulty)}
+
     Column(modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,)
@@ -45,10 +51,11 @@ fun settingsScreen(navController: NavController, SettingsViewModel: SettingsView
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = "Difficulty:")
+            val difficulty = listOf("Easy", "Normal", "Difficult")
+            Text(text = "Difficulty: ")
             OutlinedTextField(
                 label = { Text(text = "Difficulty") },
-                value = selectedText,
+                value = selectedDiff,
                 onValueChange = { selectedText = it },
                 enabled = false,
                 readOnly = true,
@@ -59,13 +66,15 @@ fun settingsScreen(navController: NavController, SettingsViewModel: SettingsView
 
                 expanded = expanded,
                 onDismissRequest = { expanded = false},
-                modifier = Modifier.fillMaxWidth()) {
+                modifier = Modifier.fillMaxWidth(0.5f)) {
                 difficulty.forEach { label ->
                     DropdownMenuItem(
                         text = { Text(text = label) },
                         onClick = {
-                            selectedText = label
+                            selectedDiff = label
                             expanded = false
+                            trivialViewModel.changeDifficulty(selectedDiff)
+                            trivialViewModel.changeQuestion()
                         }
                     )
                 }
@@ -75,11 +84,23 @@ fun settingsScreen(navController: NavController, SettingsViewModel: SettingsView
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = "Rounds")
+            Text(text = "Rounds: ", modifier = Modifier.padding(end = 200.dp))
             Column() {
-                RadioButton(selected = SettingsViewModel.rounds5 , onClick = { SettingsViewModel.rounds5 = !SettingsViewModel.rounds5})
-                RadioButton(selected = SettingsViewModel.rounds10  , onClick = { SettingsViewModel.rounds10 = !SettingsViewModel.rounds10})
-                RadioButton(selected = SettingsViewModel.rounds15  , onClick = { SettingsViewModel.rounds15 = !SettingsViewModel.rounds15 },  )
+                val dif = listOf("5", "10", "15")
+                dif.forEach { label ->
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = selectedOption.toString() == label,
+                            onClick = {
+                                selectedOption = label.toInt()
+                                trivialViewModel.changeRounds(selectedOption)
+                            })
+                        Text(text = label)
+                    }
+                }
             }
         }
 
@@ -100,13 +121,14 @@ fun settingsScreen(navController: NavController, SettingsViewModel: SettingsView
                 modifier = Modifier.padding(start = 10.dp, end = 10.dp)
             )
         }
-
+        Spacer(modifier = Modifier.padding(top = 20.dp))
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,) {
-            Text(text = "Dark mode")
-            //implementa el dark mode
-            Switch(checked = false, onCheckedChange = { /*TODO*/ })
+            Text(text = "Dark mode:  ")
+            Switch( checked = isOn,
+                onCheckedChange = { isOn = it
+                    trivialViewModel.darkModeSwap()},)
 
         }
         Row(

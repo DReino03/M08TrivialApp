@@ -6,9 +6,8 @@ data class Pregunta(
     val opcionB: String,
     val opcionC: String,
     val opcionD: String,
-    val respuestaCorrecta: Opcion
-)
+    val respuestaCorrecta: String
+) {
 
-enum class Opcion {
-    A, B, C, D
 }
+

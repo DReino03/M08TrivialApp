@@ -5,7 +5,5 @@ sealed class Routes(val route: String) {
     object menuScreen:Routes("menuScreen")
     object playScreen:Routes("playScreen")
     object settingsScreen:Routes("settingsScreen")
-    object resultScreen:Routes("resultScreen/{attempts}"){
-        fun createRoute(attempts:Int) = "ResultScreen/$attempts"
-    }
+    object resultScreen:Routes("resultScreen")
 }
