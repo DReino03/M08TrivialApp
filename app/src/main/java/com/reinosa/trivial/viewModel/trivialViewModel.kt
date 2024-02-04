@@ -46,7 +46,6 @@ class trivialViewModel: ViewModel() {
 
     //Puntos
     var points by mutableStateOf(0)
-        private set
 
     fun addPoint(add: Int) {
         points += add
@@ -90,6 +89,14 @@ class trivialViewModel: ViewModel() {
     fun darkModeSwap() {
         darkMode = !darkMode
     }
-
+    fun resetTimer () {
+        val timer = 15
+    }
+    fun endTimer(time:Int) {
+        if (time == 0) {
+            actualRound += 1
+        }
+    }
+    var time : Int by mutableStateOf(15f.toInt())
 
 }

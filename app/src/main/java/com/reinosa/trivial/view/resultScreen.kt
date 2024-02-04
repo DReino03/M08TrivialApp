@@ -37,9 +37,10 @@ Column(
     Spacer(modifier = Modifier.padding(100.dp))
     Button(
         onClick = {
-            navController.navigate("menuScreen")
             trivialViewModel.resetPoints()
-            trivialViewModel.changeRound(1)
+            trivialViewModel.actualRound = 0
+            navController.navigate("menuScreen")
+
     }) {
         Text(text = "Play again")
     }

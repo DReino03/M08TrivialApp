@@ -74,7 +74,9 @@ fun playScreen(navController: NavController, trivialViewModel: trivialViewModel)
                     trivialViewModel.changeQuestion()
                     trivialViewModel.actualRound = trivialViewModel.actualRound + 1
                     timeLeft = 15
-
+                    if (trivialViewModel.actualRound == trivialViewModel.totalRounds){
+                        navController.navigate("resultScreen")
+                    }
                 }) {
                 Text(text = "${trivialViewModel.currentQuestion.opcionA}")
             }
@@ -89,7 +91,9 @@ fun playScreen(navController: NavController, trivialViewModel: trivialViewModel)
                     trivialViewModel.changeRound(trivialViewModel.round + 1)
                     trivialViewModel.changeQuestion()
                     timeLeft = 15
-
+                    if (trivialViewModel.actualRound == trivialViewModel.totalRounds){
+                        navController.navigate("resultScreen")
+                    }
                 }) {
                 Text(text = "${trivialViewModel.currentQuestion.opcionB}")
             }
@@ -109,6 +113,9 @@ fun playScreen(navController: NavController, trivialViewModel: trivialViewModel)
                     trivialViewModel.changeRound(trivialViewModel.round + 1)
                     trivialViewModel.changeQuestion()
                     timeLeft = 15
+                    if (trivialViewModel.actualRound == trivialViewModel.totalRounds){
+                        navController.navigate("resultScreen")
+                    }
 
                 }) {
                 Text(text = "${trivialViewModel.currentQuestion.opcionC}")
@@ -126,7 +133,9 @@ fun playScreen(navController: NavController, trivialViewModel: trivialViewModel)
                     trivialViewModel.changeRound(trivialViewModel.round + 1)
                     trivialViewModel.changeQuestion()
                     timeLeft = 15
-
+                    if (trivialViewModel.actualRound == trivialViewModel.totalRounds){
+                        navController.navigate("resultScreen")
+                    }
                 }) {
                 Text(text = "${trivialViewModel.currentQuestion.opcionD}")
             }
@@ -137,6 +146,17 @@ fun playScreen(navController: NavController, trivialViewModel: trivialViewModel)
                 while (timeLeft > 0) {
                     delay(1000L)
                     timeLeft--
+
+                }
+                if (timeLeft == 0) {
+                    trivialViewModel.actualRound = trivialViewModel.actualRound + 1
+                    trivialViewModel.changeRound(trivialViewModel.actualRound+1)
+                    trivialViewModel.changeQuestion()
+                    trivialViewModel.points - 1
+                    timeLeft = 15
+                    if (trivialViewModel.actualRound == trivialViewModel.totalRounds){
+                        navController.navigate("resultScreen")
+                    }
                 }
             }
             Column(
@@ -149,17 +169,9 @@ fun playScreen(navController: NavController, trivialViewModel: trivialViewModel)
 
         }
     }
-    stopApp(navController, trivialViewModel,timeLeft)
+
 
 }
 
 
-fun stopApp(navController: NavController, settings: trivialViewModel,timeLeft:Int){
-    if (timeLeft == 0){
-        settings.actualRound = settings.totalRounds
-        navController.navigate("resultScreen")
-    }
-    else if (settings.actualRound == settings.totalRounds){
-        navController.navigate("resultScreen")
-    }
-}
+

@@ -36,9 +36,6 @@ import com.reinosa.trivial.viewModel.trivialViewModel
 fun settingsScreen(navController: NavController,trivialViewModel: trivialViewModel){
     var selectedText : String by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) } // Set expanded to true to show dropdown initially
-
-    var sliderValue by remember { mutableStateOf(0f) }
-    var finishValue by remember { mutableStateOf("") }
     var isOn = trivialViewModel.darkMode
     var selectedOption by rememberSaveable { mutableStateOf(trivialViewModel.totalRounds) }
     var selectedDiff by remember { mutableStateOf(trivialViewModel.difficulty)}
@@ -109,17 +106,7 @@ fun settingsScreen(navController: NavController,trivialViewModel: trivialViewMod
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
             Text(text = "Round Time:  ")
-            Slider(value = sliderValue,
-                onValueChange = { sliderValue = it},
-                onValueChangeFinished = { finishValue = sliderValue.toString()},
-                valueRange = 0f..30f,
-                steps = 10,
-                colors = SliderDefaults.colors(
-                    activeTickColor = Color.Transparent,
-                    inactiveTickColor = Color.Transparent
-                ),
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-            )
+            slider(trivialViewModel)
         }
         Spacer(modifier = Modifier.padding(top = 20.dp))
         Row(
@@ -144,4 +131,28 @@ fun settingsScreen(navController: NavController,trivialViewModel: trivialViewMod
         }
     }
 
+}
+@Composable
+fun slider(trivialViewModel: trivialViewModel){
+    var sliderValue by remember { mutableStateOf(5) }
+    var finishValue by remember { mutableStateOf("") }
+    Column() {
+        Slider(
+            value = sliderValue.toFloat(),
+            onValueChange = { sliderValue = it.toInt() },
+            onValueChangeFinished = { finishValue = sliderValue.toString() },
+            valueRange = 5f..30f,
+            steps = 10,
+            colors = SliderDefaults.colors(
+                activeTickColor = Color.Transparent,
+                inactiveTickColor = Color.Transparent
+            ),
+            modifier = Modifier.padding(start = 10.dp, end = 10.dp)
+        )
+        Text(
+            text = sliderValue.toString(),
+            //trivialViewModel.time = sliderValue.toInt())
+        )
+
+    }
 }
